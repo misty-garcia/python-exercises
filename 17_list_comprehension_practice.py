@@ -96,6 +96,6 @@ print(numbers_plus_five)
 
 # BONUS Make a variable named "primes" that is a list containing the prime numbers in the numbers list. *Hint* you may want to make or find a helper function that determines if a given number is prime or not.
 prime = [x for x in numbers for y in range(x) if (x % (y - 1)) == 0 ]
-
+    
 @misty-garcia
  
