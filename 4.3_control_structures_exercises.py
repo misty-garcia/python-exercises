@@ -69,7 +69,7 @@ while i > 0:
 # 2bi. Write some code that prompts the user for a number, then shows a multiplication table up through 10 for that number.
 user_number = int(input("Enter a number: "))
 
-for x  in range(10):
+for x in range(10):
     print(user_number, "x", x + 1, "=", user_number * (x + 1)) 
 
 # 2bii. Create a for loop that uses print to create the output shown below.
@@ -78,11 +78,73 @@ for x in range(1,10):
         if x == y:
             print(x * str(y))
 
-# 3ci. Prompt the user for an odd number between 1 and 50. Use a loop and a break statement to continue prompting the user if they enter invalid input. (Hint: use the isdigit method on strings to determine this). Use a loop and the continue statement to output all the odd numbers between 1 and 50, except for the number the user entered.
-user_number = int(input("Enter a number: "))
+# 2ci. Prompt the user for an odd number between 1 and 50. Use a loop and a break statement to continue prompting the user if they enter invalid input. (Hint: use the isdigit method on strings to determine this). Use a loop and the continue statement to output all the odd numbers between 1 and 50, except for the number the user entered.
+# user_number = int(input("Enter a number: "))
 
-user_odd_number = 5
+while True:
+    user_odd_number = input("Enter an odd number less than 50: ")
+    if str(user_odd_number).isdigit() and int(user_odd_number) % 2 == 1 and int(user_odd_number) < 50:
+        print("Number to skip:", user_odd_number)
+        print()
+        break
+    else:
+        print("Invalid input.")
 
-count = 1
-while count < 50:
-    print
+user_odd_number = int(user_odd_number)
+for x in range(1,50,2):
+    if user_odd_number == x:
+        print("Yikes! Skipping number:", user_odd_number)
+        continue
+    print("Here is an odd number:", x)
+
+# 2d. The input function can be used to prompt for input and use that input in your python code. Prompt the user to enter a positive number and write a loop that counts from 0 to that number. (Hints: first make sure that the value the user entered is a valid number, also note that the input function returns a string, so you'll need to convert this to a numeric type.)
+while True:
+    user_positive_number = input("Enter a positive number: ")
+    if str(user_positive_number).isdigit() and int(user_positive_number) > 0:
+        for x in range(int(user_positive_number)+1):
+            print(x)
+        break
+    else:
+        print("Invalid input.")
+# 2e. Write a program that prompts the user for a positive integer. Next write a loop that prints out the numbers from the number the user entered down to 1.
+while True:
+    user_positive_number = input("Enter a positive number: ")
+    if str(user_positive_number).isdigit() and int(user_positive_number) > 0:
+        for x in range(int(user_positive_number),0,-1):
+            print(x)
+        break
+    else:
+        print("Invaild input.")
+
+# 3. Write a program that prints the numbers from 1 to 100.
+# For multiples of three print "Fizz" instead of the number
+# For the multiples of five print "Buzz".
+# For numbers which are multiples of both three and five print "FizzBuzz".
+for x in range(1,101):
+    if x % 3 == 0 and x % 5 == 0:
+        print("FizzBuzz")
+        continue
+    elif x % 3 == 0:
+        print("Fizz")
+        continue
+    elif x % 5 == 0:
+        print("Buzz")
+        continue
+    print(x)
+
+# 4. Prompt the user to enter an integer.
+# Display a table of squares and cubes from 1 to the value entered.
+# Ask if the user wants to continue.
+# Assume that the user will enter valid data.
+# Only continue if the user agrees to.
+
+while True:
+    user_integer = int(input("What number would you like to go up to? "))
+    print("Here is your table!")
+    print()
+    for x in range(user_integer+1):
+        print(x, x ** 2, x ** 3)
+    again = input("Would you like to continue? ")
+    if again.lower() == "no" or again.lower() == "n":
+        break
+
