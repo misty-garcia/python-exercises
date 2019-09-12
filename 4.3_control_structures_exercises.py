@@ -144,7 +144,56 @@ while True:
     print()
     for x in range(user_integer+1):
         print(x, x ** 2, x ** 3)
-    again = input("Would you like to continue? ")
-    if again.lower() == "no" or again.lower() == "n":
+    again = input("Would you like to continue ('no' to exit)?")
+    if again.lower() == "no":
         break
 
+# 5. Prompt the user for a numerical grade from 0 to 100.
+# Display the corresponding letter grade.
+# Prompt the user to continue.
+# Assume that the user will enter valid integers for the grades.
+# The application should only continue if the user agrees to.
+# Grade Ranges:
+# A : 100 - 88
+# B : 87 - 80
+# C : 79 - 67
+# D : 66 - 60
+# F : 59 - 0
+# Bonus: Edit your grade ranges to include pluses and minuses (ex: 99-100 = A+).
+
+while True:
+    user_grade = int(input('Enter a numerical grade from 0 to 100: '))
+    if user_grade >= 97:
+        print("The letter grade: A+")
+    elif user_grade >=93:
+        print("The letter grade: A") 
+    elif user_grade >=88:
+        print("The letter grade: A-") 
+    elif user_grade >=85:
+        print("The letter grade: B+") 
+    elif user_grade >=83:
+        print("The letter grade: B") 
+    elif user_grade >=80:
+        print("The letter grade: B-") 
+    elif user_grade >=77:
+        print("The letter grade: C+") 
+    elif user_grade >=73:
+        print("The letter grade: C")
+    elif user_grade >=67:
+        print("The letter grade: C-") 
+    elif user_grade >= 60:
+        print("The letter grade: D")
+    else:
+        print("The letter grade: F")
+    again = input("Would you like to continue ('no' to exit)?")
+    if again.lower() == "no":
+        break
+
+# 6. Create a list of dictionaries where each dictionary represents a book that you have read. Each dictionary in the list should have the keys title, author, and genre. Loop through the list and print out information about each book.
+
+# Prompt the user to enter a genre, then loop through your books list and print out the titles of all the books in that genre.
+
+books = [
+    {"title":"1984", "author":"Emily Bronte", "genre":"Literature" }
+]
+print(books)
