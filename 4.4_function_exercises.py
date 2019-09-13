@@ -11,10 +11,15 @@ is_two("hello")
 def is_vowel(x):
     return x.lower() == "a" or x.lower() == "e" or x.lower() == "o" or x.lower() == "u" or x.lower() == "i"
 
+def is_vowel(x):
+    return x.lower() in "aeiou"
+
+is_vowel("a")
 is_vowel("o")
 is_vowel("i")
 is_vowel("ab")
 is_vowel("A")
+is_vowel("aa")
 
 # 3. Define a function named is_consonant. It should return True if the passed string is a consonant, False otherwise. Use your is_vowel function to accomplish this.
 def is_consonant(x):
@@ -27,9 +32,15 @@ is_consonant("V")
 
 # 4. Define a function that accepts a string that is a word. The function should capitalize the first letter of the word if the word starts with a consonant.
 def capital_word(word):
-    return word.capitalize()
+    if is_consonant(word[0]):
+        return word.capitalize()
+    return word
+
+def capital_word(word):
+    return word.capitalize() if is_consonant(word[0]) else word
 
 capital_word("hello")
+capital_word("agloo")
 
 # 5. Define a function named calculate_tip. It should accept a tip percentage (a number between 0 and 1) and the bill total, and return the amount to tip.
 def calculate_tip(tip_percent,bill):
@@ -45,17 +56,12 @@ apply_discount(20, .2)
 apply_discount(21, .31)
 
 # 7. Define a function named handle_commas. It should accept a string that is a number that contains commas in it as input, and return a number as output.
-def handle_commas(*args):
-    x = ""
-    for arg in args:
-        print(str(arg))
-        x = x + str(arg)
-        print(x)
-    return int(x)
+def handle_commas(string):
+    return float(string.replace(",",""))
 
-handle_commas(23,255)
-handle_commas(1,000,000)
-handle_commas(89,123,567,867,234)
+handle_commas("23,255")
+handle_commas("1,000,000")
+handle_commas("89,123,567,867,234")
 
 # 8. Define a function named get_letter_grade. It should accept a number and return the letter grade associated with that number (A-F).
 def get_letter_grade(num):
@@ -104,14 +110,19 @@ remove_vowels("bookeeper")
 # First Name will become first_name
 # % Completed will become completed
 def normalize_name(string):
-    valid_string = string
-    for x in valid_string:
-        if not valid_string.isalnum():
-            valid_string = valid_string.replace(x,"")
-    return valid_string.strip().replace(" ", "_").lower()
+    string = string.strip()
+    for x in string:
+        if not x.isalnum():
+            if x != " ":
+                string = string.replace(x,"")
+                string = string.strip()
+            else:
+                string = string.replace(x,"_")
+    return string.strip().replace(" ", "_").lower()
 
 normalize_name("Misty")
 normalize_name("  mistYYY ")
+normalize_name("First Name")
 normalize_name("% $ Completed %  ")
 
 # 11. Write a function named cumsum that accepts a list of numbers and returns a list that is the cumulative sum of the numbers in the list.
@@ -165,8 +176,15 @@ twentyfourto12("16:45")
         return ord(colum_name.upper()) - 64
     index = 0
     count = 0
-    for x in colum_name:
-        index =  count * 26 + ord(x.upper()) - 64
+    reverse_name = colum_name[::-1]
+    print(reverse_name)
+    for x in reverse_name:
+        char_num = ord(x.upper()) - 64
+        index =  index + char_num * (26 ** count)
+        print("the char num is", char_num)
+        print("the count is", count)
+        print("the index is", index)
+        print("")
         count += 1
     return index
 
@@ -176,7 +194,70 @@ col_index("z")
 col_index("AA")
 col_index("AB")
 col_index("AZ")
-
 col_index("BA")
 col_index("ZZ")
 col_index("AAA")
+col_index("AAB")
+col_index("AAZ")
+col_index("ABA")
+col_index("ZZZ")
+
+# add(x, y)
+def add(x,y):
+    return x + y
+
+add(2,3)
+
+# subtract(x, y)
+def subtract(x,y):
+    return x - y
+
+subtract(2,3)
+
+# multiply(x, y)
+def multiply(x,y):
+    return x*y
+
+multiply(4,7)
+
+# divide(x, y)
+def divide(x,y):
+    return x/y
+
+divide(12,5)
+
+# bonus: define multiply without using the * operator
+def multiply(x,y):
+    total = 0
+    count = 1
+    while count <= y:
+        total += x
+        count += 1
+    return total
+
+multiply(4,5)
+multiply(8,0)
+multiply(0,8)
+multiply(20,2)
+
+# bonus: define divide without using the / operator
+def divide(x,y):
+    count = 0
+    while x > 0:
+        x -= y
+        if x < 0:
+            x = x + y
+        count += 1
+        print("the toal is", x)
+        print("the count is", count)
+    return count
+
+divide(20,5)
+divide(10,4)
+
+# bonus bonus: define multiply without using a loop or the * operator
+
+# bonus bonus: define divide without using a loop or the / operator
+
+# define a function named roll_dice it will accept a specially formatted input string and return a list of the random dice rolls specified
+
