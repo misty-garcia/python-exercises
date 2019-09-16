@@ -244,10 +244,8 @@ multiply(20,2)
 def divide(x,y):
     count = 0
     while x > 0:
+        count += 1        
         x -= y
-        if x < 0:
-            x = x + y
-        count += 1
         print("the toal is", x)
         print("the count is", count)
     return count
@@ -256,8 +254,25 @@ divide(20,5)
 divide(10,4)
 
 # bonus bonus: define multiply without using a loop or the * operator
+def multiply(x,y):
+    total = 0
+    count = 1
+    while count <= y:
+        total += x
+        count += 1
+    return total
+    
 
 # bonus bonus: define divide without using a loop or the / operator
 
 # define a function named roll_dice it will accept a specially formatted input string and return a list of the random dice rolls specified
 
+from random import randint
+
+random_number = randint(1, 6)
+print(random_number)
+
+def roll_dice(num_d_side):
+    for x in num_d_side:
+        if x.isnumeric():
+            
