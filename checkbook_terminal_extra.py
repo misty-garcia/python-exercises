@@ -20,13 +20,6 @@ These are your options via the terminal:
     with open("transactions.txt") as f:
         data = json.load(f) #open latest data list
 
-    balance = 0 #calculate current balance every time
-    for x in data:
-        if x["type"] == "deposit":
-            balance = balance + float(x["amount"].strip("$"))
-        elif x["type"] == "withdraw":
-            balance = balance - float(x["amount"].strip("$"))
-
     while True: #repeats until user enters a valid entry
         time.sleep(1)
         user_select = input("What would you like to do today? ")
@@ -34,9 +27,11 @@ These are your options via the terminal:
             break
         else:
             print("Invalid entry.")
+
+    balance = (open("balance.txt","r"))
  
     if user_select == "1":
-        print(f"Your balance is ${balance}.")
+        print(f"Your balance is ${balance.read()}.") 
 
     elif user_select == "2":
         while True: #repeats until numeric entry
@@ -49,11 +44,14 @@ These are your options via the terminal:
         print(f"Withdraw amount: ${change_balance}")
         change_description = input("Description (optional): ")
 
-        after_change = format((float(balance) - float(change_balance)), ".2f")
+        after_change = format((float(balance.read()) - float(change_balance)), ".2f")
         print("")
         print(f"Your new balance is ${after_change}.") #shows new balance
         if float(after_change) < 0:
             print("***Warning: Negative balance. Will incur overdraft fees.***")
+
+        balance = (open("balance.txt", "w"))
+        balance.write(str(after_change)) #write new balance back to balance sheet
 
         data.append(
             {
@@ -78,9 +76,12 @@ These are your options via the terminal:
         print(f"Deposit amount: ${change_balance}")
         change_description = input("Description (optional): ")
 
-        after_change = format((float(balance) + float(change_balance)), ".2f")
+        after_change = format((float(balance.read()) + float(change_balance)), ".2f")
         print("")
         print(f"Your new balance is ${after_change}.") #shows new balance
+
+        balance = (open("balance.txt", "w"))
+        balance.write(str(after_change)) #write new balance back to balance sheet
 
         data.append(
             {
