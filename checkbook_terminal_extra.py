@@ -3,8 +3,6 @@ from datetime import datetime
 import time
 import os.path
 import sys
-# import checkbook_functions as cf
-# data = []
 
 def exit_program(): #function to exit program
         print("")
@@ -155,13 +153,14 @@ These are your options via the terminal:
             print("    a) all transactions")
             print("    b) withdraws")
             print("    c) deposits")
-            print("    d) search by date")
-            print("    e) search by key word")
+            print("    d) fees")
+            print("    e) search by date")
+            print("    f) search by key word")
             print("")
             user_select_type = input("Which would you like to view? ")
             if user_select_type == "exit":
                 exit_program()
-            elif user_select_type in "abcde": 
+            elif user_select_type in "abcdef": 
                 break
             else:
                 print("Invalid entry.")
@@ -224,6 +223,25 @@ These are your options via the terminal:
                 print("There are no records matching selected criteria.")
         elif user_select_type == "d":
             print("")
+            print("Past fees:")
+            available_transaction = 0
+            total = 0 
+            for x in data:
+                if x["type"] == "fee":
+                    print(x) #prints all fees
+                    available_transaction += 1
+                    total += float(x["amount"].strip("$"))
+            if available_transaction > 0: #checks for transactions matching criteria 
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
+
+        elif user_select_type == "e":
+            print("")
             while True: #repeats until valid entry
                 select_date = input("Enter desired date (mm/dd/yy): ")       
                 if select_date == "exit":
@@ -249,7 +267,7 @@ These are your options via the terminal:
                 print(f"Average: ${average}")
             else:
                 print("There are no records matching selected criteria.")
-        elif user_select_type == "e": 
+        elif user_select_type == "f": 
             print("")
             select_key = input("Enter desired keyword: ")
             if select_key == "exit":
