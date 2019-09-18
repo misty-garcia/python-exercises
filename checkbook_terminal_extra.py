@@ -1,7 +1,8 @@
 import json
 from datetime import datetime
 import time
-import checkbook_functions as cf
+import os.path
+# import checkbook_functions as cf
 data = []
 
 print("")
@@ -14,21 +15,35 @@ These are your options via the terminal:
     2) record a debit (withdraw)
     3) record a credit (deposit)
     4) view transactions
-    5) exit
+    5) modify past transaction 
+    6) exit
     """) #shows user options every time
 
-    with open("transactions.txt") as f:
-        data = json.load(f) #open latest data list
-
     while True: #repeats until user enters a valid entry
-        time.sleep(1)
+        time.sleep(.5)
         user_select = input("What would you like to do today? ")
-        if user_select in "12345": #only valid entries
+        if user_select in "123456": #only valid entries
             break
         else:
             print("Invalid entry.")
 
-    balance = (open("balance.txt","r"))
+    if os.path.exists("transactions.txt"):
+        with open("transactions.txt") as f:
+            data = json.load(f) #open latest data list
+    else: 
+        f= open("transactions.txt","w+")
+        f.write("[]")
+        f.close() 
+        with open("transactions.txt") as f:
+            data = json.load(f) #if data list doesnt exist yet, create it and open it
+
+    if os.path.exists("balance.txt"):
+        balance = (open("balance.txt","r")) #open balance sheet
+    else: 
+        f= open("balance.txt","w+")
+        f.write("0")
+        f.close() 
+        balance = (open("balance.txt","r"))
  
     if user_select == "1":
         print(f"Your balance is ${balance.read()}.") 
@@ -115,28 +130,55 @@ These are your options via the terminal:
             print("")
             print("Past transactions:")
             available_transaction = 0
+            total = 0
             for x in data:
                 print(x) #prints all transactions
                 available_transaction += 1
-            cf.records_returned(available_transaction)
+                total += float(x["amount"].strip("$"))
+            if available_transaction > 0:
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
         elif user_select_type == "b":
             print("")
             print("Past withdraws:")
             available_transaction = 0
+            total = 0
             for x in data:
                 if x["type"] == "withdraw":
                     print(x) #prints all withdraws
                     available_transaction += 1
-            cf.records_returned(available_transaction)  
+                    total += float(x["amount"].strip("$"))
+            if available_transaction > 0:
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
         elif user_select_type == "c":
             print("")
             print("Past deposits:")
             available_transaction = 0
+            total = 0 
             for x in data:
                 if x["type"] == "deposit":
                     print(x) #prints all deposits
                     available_transaction += 1
-            cf.records_returned(available_transaction) 
+                    total += float(x["amount"].strip("$"))
+            if available_transaction > 0:
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
         elif user_select_type == "d":
             print("")
             while True:
@@ -151,25 +193,111 @@ These are your options via the terminal:
             print("")
             print(f"Transactions on {select_date}:")
             available_transaction = 0
+            total = 0
             for x in data:
                 if x["date"] == select_date:
                     print(x)
                     available_transaction += 1
-            cf.records_returned(available_transaction)
-        else: 
+                    total += float(x["amount"].strip("$"))
+            if available_transaction > 0:
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
+        elif user_select_type == "e": 
             print("")
             select_key = input("Enter desired keyword: ")
             print("")
             print(f"Transactions with '{select_key}':")
             available_transaction = 0
+            total = 0
             for x in data:
                 if x["description"].find(select_key) >= 0:
                     print(x)
                     available_transaction += 1
-            cf.records_returned(available_transaction)
+                    total += float(x["amount"].strip("$"))
+            if available_transaction > 0:
+                print(f"Records returned: {available_transaction}")
+                total = format(total,".2f") 
+                print(f"Total: ${total}")
+                average = format(float(total) / int(available_transaction),".2f")
+                print(f"Average: ${average}")
+            else:
+                print("There are no records matching selected criteria.")
+    elif user_select == "5":
+        print("")
+        print("You are only able to modify descriptions of past transactions.")
+        while True:
+            select_date = input("Enter desired date (mm/dd/yy): ")
+            if select_date[2] != '/':
+                print("Invalid entry.")
+                continue
+            elif select_date[5] != '/':
+                print("Invalid entry.")
+            else:
+                break    
+        count = 0
+        print("")
+        print(f"Transactions on {select_date}:")        
+        for x in data:
+            if x["date"] == select_date:
+                print(x)
+                count += 1
+        if count == 0:
+            print("There are no records matching selected critera")
+        else:
+            print("")
+            while True:
+                select_amount = input("Select transaction amount: ")
+                if select_amount.replace(".","").strip("$").isdigit():
+                    break
+                else:
+                    print("This is not a numeric value.")
+            select_amount = '$' + format(float(select_amount.strip("$")), ".2f")
+            count = 0
+            for x in data:
+                if x["date"] == select_date and x["amount"] == select_amount:
+                    count += 1
+            if count > 1:
+                select_time = input("Select time of transaction (hh:mm): ")
+                count = 0 
+                for x in data:
+                    if x["date"] == select_date and x["amount"] == select_amount and x["time"] == select_time:
+                        count += 1
+                        print("Selected entry:")
+                        print(x)
+                        print("")
+                        select_description = input("Enter new description: ")
+                        select_description = {"description":select_description}
+                        x.update(select_description)
+                        print("New entry:")
+                        print(x)
+                        with open("transactions.txt", "w") as f:
+                            json.dump(data, f) #dump data list into file
+                if count == 0:
+                    print("There are no records matching selected criteria.")
+            elif count == 1:
+                print("")
+                for x in data:
+                    if x["date"] == select_date and x["amount"] == select_amount:
+                        print("Selected entry:")
+                        print(x)
+                        print("")
+                        select_description = input("Enter new description: ")
+                        select_description = {"description":select_description}
+                        x.update(select_description)
+                        print("New entry:")
+                        print(x)
+                        with open("transactions.txt", "w") as f:
+                            json.dump(data, f) #dump data list into file
+            else:
+                print("")
+                print("There are no records matching selected criteria.")
     else:
         print("")
         print("Thanks! Have a great day!") 
         print("")  
         break #exits the program
-
