@@ -2,8 +2,15 @@ import json
 from datetime import datetime
 import time
 import os.path
+import sys
 # import checkbook_functions as cf
-data = []
+# data = []
+
+def exit_program(): #function to exit program
+        print("")
+        print("Thanks! Have a great day!") 
+        print("")  
+        sys.exit(0)
 
 print("")
 print("~~ Welcome to your checkbook~~") #prints opening statement, does not repeat
@@ -16,18 +23,20 @@ These are your options via the terminal:
     3) record a credit (deposit)
     4) view transactions
     5) modify past transaction 
-    6) exit
+    6) exit (type exit at any time to exit)
     """) #shows user options every time
 
     while True: #repeats until user enters a valid entry
         time.sleep(.5)
         user_select = input("What would you like to do today? ")
-        if user_select in "123456": #only valid entries
+        if user_select == "exit":
+            exit_program()
+        elif user_select in "123456": #only valid entries
             break
         else:
             print("Invalid entry.")
 
-    if os.path.exists("transactions.txt"):
+    if os.path.exists("transactions.txt"): 
         with open("transactions.txt") as f:
             data = json.load(f) #open latest data list
     else: 
@@ -35,7 +44,7 @@ These are your options via the terminal:
         f.write("[]")
         f.close() 
         with open("transactions.txt") as f:
-            data = json.load(f) #if data list doesnt exist yet, create it and open it
+            data = json.load(f) #if data list doesnt exist, create it and open it
 
     if os.path.exists("balance.txt"):
         balance = (open("balance.txt","r")) #open balance sheet
@@ -43,33 +52,37 @@ These are your options via the terminal:
         f= open("balance.txt","w+")
         f.write("0")
         f.close() 
-        balance = (open("balance.txt","r"))
+        balance = (open("balance.txt","r")) #if balance doesnt exist, create and open it
  
     if user_select == "1":
-        print(f"Your balance is ${balance.read()}.") 
+        print(f"Your balance is ${balance.read()}.") #print balance from balance sheet
 
     elif user_select == "2":
         while True: #repeats until numeric entry
             change_balance = input("How much would you like to withdraw? ")
-            if change_balance.replace(".","").isdigit():
+            if change_balance == "exit":
+                exit_program()
+            elif change_balance.replace(".","").isdigit():
                 break
             else:
                 print("This is not a numeric value.")
-        change_balance = format(float(change_balance), ".2f")
+        
+        change_balance = format(float(change_balance), ".2f") #format change_balance to manipulate
         print(f"Withdraw amount: ${change_balance}")
-        change_description = input("Description (optional): ")
+        change_description = input("Description (optional): ") 
+        if change_description == "exit":
+            exit_program()        
 
         after_change = format((float(balance.read()) - float(change_balance)), ".2f")
         print("")
-        print(f"Your new balance is ${after_change}.") #shows new balance
-        if float(after_change) < 0:
-            print("***Warning: Negative balance. Will incur overdraft fees.***")
+        print(f"Your new balance is ${after_change}.") #shows updated balance
 
         balance = (open("balance.txt", "w"))
         balance.write(str(after_change)) #write new balance back to balance sheet
 
         data.append(
             {
+            'id' : len(data),
             'type': 'withdraw',
             'amount': "$" + change_balance,
             'date': datetime.now().strftime("%m/%d/%y"),
@@ -77,29 +90,53 @@ These are your options via the terminal:
             'description': change_description
             }) #add withdraw to data list
         
+        if float(after_change) < 0: #perform if negative balance
+            print("")
+            print("*** Warning: Negative balance. Incurs $25 overdraft fee. ***")
+            after_change = format(float(after_change) - float(25), ".2f")
+            print(f"Your balance after fees is ${after_change}.") #shows updated balance
+
+            balance = (open("balance.txt", "w"))
+            balance.write(str(after_change)) #write new balance back to balance sheet
+
+            data.append(
+                {
+                'id' : len(data),
+                'type': 'fee',
+                'amount': "$25.00",
+                'date': datetime.now().strftime("%m/%d/%y"),
+                'time': datetime.now().strftime("%H:%M"),
+                'description': "overdraft fee"
+                }) #add fee to data list
+
         with open("transactions.txt", "w") as f:
             json.dump(data,f) #dump data list into file
         
     elif user_select == "3":
-        while True: #repeats enter numeric entry
+        while True: #repeats until numeric entry
             change_balance = input("How much would you like to deposit? ")
-            if change_balance.replace(".","").isdigit():
+            if change_balance == "exit":
+                exit_program()
+            elif change_balance.replace(".","").isdigit():
                 break
             else:
                 print("This is not a numeric value.")
-        change_balance = format(float(change_balance), ".2f")
+        change_balance = format(float(change_balance), ".2f") #format change_balance to manipulate
         print(f"Deposit amount: ${change_balance}")
         change_description = input("Description (optional): ")
+        if change_description == "exit":
+            exit_program()
 
         after_change = format((float(balance.read()) + float(change_balance)), ".2f")
         print("")
-        print(f"Your new balance is ${after_change}.") #shows new balance
+        print(f"Your new balance is ${after_change}.") #shows updated balance
 
         balance = (open("balance.txt", "w"))
         balance.write(str(after_change)) #write new balance back to balance sheet
 
         data.append(
             {
+            'id' : len(data),            
             'type': 'deposit',
             'amount': "$" + change_balance,
             'date': datetime.now().strftime("%m/%d/%y"),
@@ -114,7 +151,7 @@ These are your options via the terminal:
         print("")
         print("Available transactions:")
 
-        while True:
+        while True: #repeats until valid entry
             print("    a) all transactions")
             print("    b) withdraws")
             print("    c) deposits")
@@ -122,10 +159,13 @@ These are your options via the terminal:
             print("    e) search by key word")
             print("")
             user_select_type = input("Which would you like to view? ")
-            if user_select_type in "abcde": #verifies valid selection
+            if user_select_type == "exit":
+                exit_program()
+            elif user_select_type in "abcde": 
                 break
             else:
                 print("Invalid entry.")
+ 
         if user_select_type == "a":
             print("")
             print("Past transactions:")
@@ -134,8 +174,11 @@ These are your options via the terminal:
             for x in data:
                 print(x) #prints all transactions
                 available_transaction += 1
-                total += float(x["amount"].strip("$"))
-            if available_transaction > 0:
+                if x["type"] == "deposit": #totals transactions by deposits or withdraws or fees
+                    total += float(x["amount"].strip("$"))
+                elif x["type"] == "withdraw" or x["type"] == "fee":
+                    total -= float(x["amount"].strip("$"))
+            if available_transaction > 0: #checks for transactions matching criteria 
                 print(f"Records returned: {available_transaction}")
                 total = format(total,".2f") 
                 print(f"Total: ${total}")
@@ -153,7 +196,7 @@ These are your options via the terminal:
                     print(x) #prints all withdraws
                     available_transaction += 1
                     total += float(x["amount"].strip("$"))
-            if available_transaction > 0:
+            if available_transaction > 0: #checks for transactions matching criteria 
                 print(f"Records returned: {available_transaction}")
                 total = format(total,".2f") 
                 print(f"Total: ${total}")
@@ -171,7 +214,7 @@ These are your options via the terminal:
                     print(x) #prints all deposits
                     available_transaction += 1
                     total += float(x["amount"].strip("$"))
-            if available_transaction > 0:
+            if available_transaction > 0: #checks for transactions matching criteria 
                 print(f"Records returned: {available_transaction}")
                 total = format(total,".2f") 
                 print(f"Total: ${total}")
@@ -181,12 +224,11 @@ These are your options via the terminal:
                 print("There are no records matching selected criteria.")
         elif user_select_type == "d":
             print("")
-            while True:
-                select_date = input("Enter desired date (mm/dd/yy): ")
-                if select_date[2] != '/':
-                    print("Invalid entry.")
-                    continue
-                elif select_date[5] != '/':
+            while True: #repeats until valid entry
+                select_date = input("Enter desired date (mm/dd/yy): ")       
+                if select_date == "exit":
+                    exit_program()
+                elif len(select_date) != 8 or select_date[2] != '/' or select_date[5] != '/' or select_date.isalpha():
                     print("Invalid entry.")
                 else:
                     break
@@ -196,10 +238,10 @@ These are your options via the terminal:
             total = 0
             for x in data:
                 if x["date"] == select_date:
-                    print(x)
+                    print(x) #prints all transactions on selected date
                     available_transaction += 1
                     total += float(x["amount"].strip("$"))
-            if available_transaction > 0:
+            if available_transaction > 0: #checks for transactions matching criteria 
                 print(f"Records returned: {available_transaction}")
                 total = format(total,".2f") 
                 print(f"Total: ${total}")
@@ -210,16 +252,19 @@ These are your options via the terminal:
         elif user_select_type == "e": 
             print("")
             select_key = input("Enter desired keyword: ")
+            if select_key == "exit":
+                exit_program()
+
             print("")
             print(f"Transactions with '{select_key}':")
             available_transaction = 0
             total = 0
-            for x in data:
+            for x in data: 
                 if x["description"].find(select_key) >= 0:
-                    print(x)
+                    print(x) #prints all transactions with selected keyword
                     available_transaction += 1
                     total += float(x["amount"].strip("$"))
-            if available_transaction > 0:
+            if available_transaction > 0: #checks for transactions matching criteria 
                 print(f"Records returned: {available_transaction}")
                 total = format(total,".2f") 
                 print(f"Total: ${total}")
@@ -229,75 +274,33 @@ These are your options via the terminal:
                 print("There are no records matching selected criteria.")
     elif user_select == "5":
         print("")
-        print("You are only able to modify descriptions of past transactions.")
-        while True:
-            select_date = input("Enter desired date (mm/dd/yy): ")
-            if select_date[2] != '/':
-                print("Invalid entry.")
-                continue
-            elif select_date[5] != '/':
+        print("Note: You are only able to modify DESCRIPTIONS.")
+        while True: #repeats until valid entry
+            select_id = input("Select id of transaction to modify: ")
+            if select_id == "exit":
+                exit_program()
+            elif select_id.isdigit() == False:
                 print("Invalid entry.")
             else:
-                break    
+                break 
         count = 0
-        print("")
-        print(f"Transactions on {select_date}:")        
         for x in data:
-            if x["date"] == select_date:
-                print(x)
+            if x["id"] == int(select_id):
                 count += 1
+                print("Selected entry:")
+                print(x) 
+                print("")
+                select_description = input("Enter new description: ") #inputs new description
+                if select_description == "exit":
+                    exit_program()
+                select_description = {"description":select_description}
+                x.update(select_description) #update description for selected entry
+                print("New entry:")
+                print(x)
+                with open("transactions.txt", "w") as f:
+                    json.dump(data, f) #dump data list into file
         if count == 0:
-            print("There are no records matching selected critera")
-        else:
             print("")
-            while True:
-                select_amount = input("Select transaction amount: ")
-                if select_amount.replace(".","").strip("$").isdigit():
-                    break
-                else:
-                    print("This is not a numeric value.")
-            select_amount = '$' + format(float(select_amount.strip("$")), ".2f")
-            count = 0
-            for x in data:
-                if x["date"] == select_date and x["amount"] == select_amount:
-                    count += 1
-            if count > 1:
-                select_time = input("Select time of transaction (hh:mm): ")
-                count = 0 
-                for x in data:
-                    if x["date"] == select_date and x["amount"] == select_amount and x["time"] == select_time:
-                        count += 1
-                        print("Selected entry:")
-                        print(x)
-                        print("")
-                        select_description = input("Enter new description: ")
-                        select_description = {"description":select_description}
-                        x.update(select_description)
-                        print("New entry:")
-                        print(x)
-                        with open("transactions.txt", "w") as f:
-                            json.dump(data, f) #dump data list into file
-                if count == 0:
-                    print("There are no records matching selected criteria.")
-            elif count == 1:
-                print("")
-                for x in data:
-                    if x["date"] == select_date and x["amount"] == select_amount:
-                        print("Selected entry:")
-                        print(x)
-                        print("")
-                        select_description = input("Enter new description: ")
-                        select_description = {"description":select_description}
-                        x.update(select_description)
-                        print("New entry:")
-                        print(x)
-                        with open("transactions.txt", "w") as f:
-                            json.dump(data, f) #dump data list into file
-            else:
-                print("")
-                print("There are no records matching selected criteria.")
+            print("There are no records matching selected criteria.")
     else:
-        print("")
-        print("Thanks! Have a great day!") 
-        print("")  
-        break #exits the program
+        exit_program()
