@@ -84,6 +84,16 @@ def name_to_dict(full_name):
     new_dict["last_name"] = new_list[1]
     return new_dict
 
+def name_to_dict(name):
+    new_list = name.split(" ")
+    first = new_list[0]
+    last = new_list[1]
+    return {
+        "first_name": first,
+        "last_name": last
+    }
+
+
 def capitalize_names(dict_names):
     '''
     >>> from solutions import capitalize_names
@@ -140,3 +150,9 @@ def analyze_word(word):
     dict_word["n_letters"] = len(word)
     dict_word["n_vowels"] = count_vowels(word)
     return dict_word
+
+    return {
+        "word" : word,
+        "n_letters" : len(word),
+        "n_vowels" : count_vowels(word)
+    }
