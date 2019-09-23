@@ -1,24 +1,19 @@
-
 import numpy as np
 
 a = np.array([4, 10, 12, 23, -2, -1, 0, 0, 0, -6, 3, -7])
 
 # How many negative numbers are there?
-
-neg_a = a[a < 0]
+neg_a = a[a<0]
 neg_a
 len(neg_a)
 
 # How many positive numbers are there?
-
 pos_a = a[a>0]
 pos_a
 len(pos_a)
 
 # How many even positive numbers are there?
-even_a = a[a % 2 == 0]
-even_a
-pos_and_even_a = even_a[even_a > 0]
+pos_and_even_a = pos_a[pos_a % 2 == 0]
 pos_and_even_a
 len(pos_and_even_a)
 
@@ -38,11 +33,10 @@ a_squared.std()
 # A common statistical operation on a dataset is centering. This means to adjust the data such that the center of the data is at 0. This is done by subtracting the mean from each data point. Center the data set.
 center_a = a - a.mean()
 center_a
-center_a.mean()
 
 # Calculate the z-score for each data point. Recall that the z-score is given by:
 # Z = (x - μ) / σ
-z_a = (a - a.mean()) - a.std()
+z_a = (a - a.mean()) / a.std()
 z_a
 
 # Copy the setup and exercise directions from More Numpy Practice into your 4.7_numpy_exercises.py and add your solutions.
@@ -54,35 +48,43 @@ a = np.array([a])
 
 # Use python's built in functionality/operators to determine the following:
 # Exercise 1 - Make a variable called sum_of_a to hold the sum of all the numbers in above list
-sum_of_a = a.sum()
+sum_of_a = sum(a)
 sum_of_a
 
 # Exercise 2 - Make a variable named min_of_a to hold the minimum of all the numbers in the above list
-min_of_a = a.min()
+min_of_a = min(a)
 min_of_a
 
 # Exercise 3 - Make a variable named max_of_a to hold the max number of all the numbers in the above list
-max_of_a = a.max()
+max_of_a = max(a)
 max_of_a
 
 # Exercise 4 - Make a variable named mean_of_a to hold the average of all the numbers in the above list
-mean_of_a = a.mean()
+mean_of_a = sum(a) / len(a)
 mean_of_a
 
 # Exercise 5 - Make a variable named product_of_a to hold the product of multiplying all the numbers in the above list together
-product_of_a = a.prod()
+product_of_a = 1
+for x in a:
+    product_of_a *= x
 product_of_a
 
 # Exercise 6 - Make a variable named squares_of_a. It should hold each number in a squared like [1, 4, 9, 16, 25...]
-squares_of_a = a ** 2
+squares_of_a = [n**2 for n in a]
 squares_of_a
 
 # Exercise 7 - Make a variable named odds_in_a. It should hold only the odd numbers
-odds_in_a = a [a % 2 == 1]
+odds_in_a = []
+for x in a:
+    if x % 2 == 1:
+        odds_in_a.append(x)
 odds_in_a
 
 # Exercise 8 - Make a variable named evens_in_a. It should hold only the evens.
-evens_in_a = a [a % 2 == 0]
+evens_in_a = []
+for x in a:
+    if x % 2 == 0:
+        evens_in_a.append(x)
 evens_in_a
 
 ## What about life in two dimensions? A list of lists is matrix, a table, a spreadsheet, a chessboard...
