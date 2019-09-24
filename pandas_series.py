@@ -14,10 +14,12 @@ fruits.describe()
 fruits.unique()
 
 # Determine how many times each value occurs in the series.
-fruits.value_counts()
+frequencies = fruits.value_counts()
 
 # Determine the most frequently occurring fruit name from the series.
 fruits.value_counts() [fruits.value_counts() == fruits.value_counts().max()]
+
+frequencies.idxmax(),frequencies.max()
 
 # Determine the least frequently occurring fruit name from the series.
 fruits.value_counts() [fruits.value_counts() == fruits.value_counts().min()]
@@ -25,14 +27,19 @@ fruits.value_counts() [fruits.value_counts() == fruits.value_counts().min()]
 # Write the code to get the longest string from the fruits series.
 fruits [fruits.str.len() == fruits.str.len().max()]
 
+fruits[fruits.str.len().idxmax()],fruits.str.len().max()
+
 # Find the fruit(s) with 5 or more letters in the name.
-fruits [fruits.str.len() > 5]
+fruits [fruits.str.len() >= 5]
 
 # Capitalize all the fruit strings in the series.
 fruits.str.capitalize()
 
 # Count the letter "a" in all the fruits (use string vectorization)
 fruits.str.count("a")
+
+fruit_names = fruits.unique()
+list(zip(fruit_names,fruit_names.str.count("a")))
 
 # Output the number of vowels in each and every fruit.
 def count_vowels(word):
@@ -44,11 +51,10 @@ def count_vowels(word):
 
 fruits.apply(count_vowels)
 
+list(zip(fruits, fruits.apply(count_vowels)))
+
 # Use the .apply method and a lambda function to find the fruit(s) containing two or more "o" letters in the name.
-fruits [fruits.apply( lambda x: True if x.count("o") > 1 else False)]
-
 fruits [fruits.apply( lambda x: x.count("o") > 1)]
-
 
 # Write the code to get only the fruits containing "berry" in the name
 def find_berry(word):
@@ -63,8 +69,6 @@ fruits [fruits.apply( lambda x: x.find("apple") != - 1)]
 
 # Which fruit has the highest amount of vowels?
 fruits [fruits.apply(count_vowels) == fruits.apply(count_vowels).max()]
-
-list(zip(fruits,fruits.apply(count_vowels)))
 
 # 2. Use pandas to create a Series from the following data:
 # ['$796,459.41', '$278.60', '$482,571.67', '$4,503,915.98', '$2,121,418.3', '$1,260,813.3', '$87,231.01', '$1,509,175.45', '$4,138,548.00', '$2,848,913.80', '$594,715.39', '$4,789,988.17', '$4,513,644.5', '$3,191,059.97', '$1,758,712.24', '$4,338,283.54', '$4,738,303.38', '$2,791,759.67', '$769,681.94', '$452,650.23']
