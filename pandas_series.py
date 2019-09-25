@@ -52,12 +52,15 @@ def count_vowels(word):
 fruits.apply(count_vowels)
 
 list(zip(fruits, fruits.apply(count_vowels)))
+list(zip(fruits.unique(), pd.Series(fruits.unique()).apply(count_vowels)))
 
 # Use the .apply method and a lambda function to find the fruit(s) containing two or more "o" letters in the name.
 fruits [fruits.apply (lambda x: x.count("o") > 1)]
 
 # Write the code to get only the fruits containing "berry" in the name
 fruits [fruits.apply (lambda x: x.find("berry") != - 1)]
+fruits [fruits.apply (lambda x: "berry" in x)]
+fruits [fruits.str.contains("berry")]
 
 # Write the code to get only the fruits containing "apple" in the name
 fruits [fruits.apply( lambda x: x.find("apple") != - 1)]
@@ -76,7 +79,7 @@ money.describe()
 money
 
 # Use series operations to convert the series to a numeric data type.
-moneys = money.str.replace(",","").str.slice(1).astype("float64")
+moneys = money.str.replace(",","").str.replace("$","").astype("float64")
 moneys
 
 # What is the maximum value? The minimum?
@@ -84,7 +87,6 @@ moneys.max()
 moneys.min()
 
 # Bin the data into 4 equally sized intervals and show how many values fall into each bin.
-moneys
 pd.cut(moneys,4).value_counts()
 
 # Plot a histogram of the data. Be sure to include a title and axis labels.
@@ -118,7 +120,7 @@ letter_scores.value_counts()
 letter_scores.value_counts().plot.bar()
 
 letters = ["A","B","C","D","F"]
-letter_scores.value_counts().loc[letters].plot.bar()
+letter_scores.value_counts().loc[letters].plot.bar(title="Grades")
 
 df = pd.DataFrame(letter_scores.value_counts())
 df.loc[letters].plot.bar()
@@ -127,6 +129,7 @@ df.loc[letters].plot.bar()
 curved_scores = scores + (100 - scores.max())
 curved_letter_scores = pd.cut(curved_scores,[0,60,70,80,90,100],labels=["F","D","C","B","A"])
 curved_letter_scores.value_counts()
+curved_letter_scores.value_counts().loc[letters].plot.bar(title="Curved Grades")
 
 # Use pandas to create a Series from the following string:
 # 'hnvidduckkqxwymbimkccexbkmqygkxoyndmcxnwqarhyffsjpsrabtjzsypmzadfavyrnndndvswreauxovncxtwzpwejilzjrmmbbgbyxvjtewqthafnbkqplarokkyydtubbmnexoypulzwfhqvckdpqtpoppzqrmcvhhpwgjwupgzhiofohawytlsiyecuproguy'
@@ -135,7 +138,9 @@ longstring = pd.Series('hnvidduckkqxwymbimkccexbkmqygkxoyndmcxnwqarhyffsjpsrabtj
 longlist = pd.Series(list('hnvidduckkqxwymbimkccexbkmqygkxoyndmcxnwqarhyffsjpsrabtjzsypmzadfavyrnndndvswreauxovncxtwzpwejilzjrmmbbgbyxvjtewqthafnbkqplarokkyydtubbmnexoypulzwfhqvckdpqtpoppzqrmcvhhpwgjwupgzhiofohawytlsiyecuproguy'))
 
 # What is the most frequently occuring letter? Least frequently occuring?
-longlist.value_counts()
+longlist.mode()
+longlist.value_counts().head(1)
+longlist.value_counts().tail(1)
 
 longlist.value_counts() [longlist.value_counts() == longlist.value_counts().max()]
 
@@ -149,10 +154,10 @@ longlist.count() - sum(longlist.apply(count_vowels))
 
 # Create a series that has all of the same letters, but uppercased
 longstring.str.upper()
+longlist.str.upper()
 
 # Create a bar plot of the frequencies of the 6 most frequently occuring letters.
-longlist.value_counts().head(6).plot.bar()
-plt.title("Six Most Popular Letters in Longstring")
+longlist.value_counts().head(6).plot.bar(title="Six Most Popular Letters in Longstring")
 plt.xlabel("letters")
 plt.ylabel("frequency")
 
