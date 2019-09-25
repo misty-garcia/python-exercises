@@ -38,8 +38,8 @@ fruits.str.capitalize()
 # Count the letter "a" in all the fruits (use string vectorization)
 fruits.str.count("a")
 
-fruit_names = fruits.unique()
-list(zip(fruit_names,fruit_names.str.count("a")))
+list(zip(fruits,fruits.str.count("a")))
+list(zip(fruits.unique(),pd.Series(fruits.unique()).str.count("a")))
 
 # Output the number of vowels in each and every fruit.
 def count_vowels(word):
