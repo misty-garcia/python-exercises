@@ -91,8 +91,7 @@ pd.cut(moneys,4).value_counts()
 # % matplotlib inline
 import matplotlib.pyplot as plt
 
-moneys.plot.hist(color="blue")
-plt.title("Moneys")
+moneys.plot.hist(color="blue", title = "Moneys")
 plt.xlabel("Amount in millions")
 
 pd.cut(moneys,4).value_counts().plot.hist(color="blue")
@@ -116,6 +115,13 @@ scores.plot.hist(color="blue")
 letter_scores = pd.cut(scores,[0,60,70,80,90,100],labels=["F","D","C","B","A"])
 list(zip(scores,letter_scores))
 letter_scores.value_counts()
+letter_scores.value_counts().plot.bar()
+
+letters = ["A","B","C","D","F"]
+letter_scores.value_counts().loc[letters].plot.bar()
+
+df = pd.DataFrame(letter_scores.value_counts())
+df.loc[letters].plot.bar()
 
 # Write the code necessary to implement a curve. I.e. that grade closest to 100 should be converted to a 100, and that many points should be given to every other score as well.
 curved_scores = scores + (100 - scores.max())
