@@ -54,15 +54,10 @@ fruits.apply(count_vowels)
 list(zip(fruits, fruits.apply(count_vowels)))
 
 # Use the .apply method and a lambda function to find the fruit(s) containing two or more "o" letters in the name.
-fruits [fruits.apply( lambda x: x.count("o") > 1)]
+fruits [fruits.apply (lambda x: x.count("o") > 1)]
 
 # Write the code to get only the fruits containing "berry" in the name
-def find_berry(word):
-    return word.find("berry") != -1
-
-fruits [fruits.apply(find_berry)]
-
-fruits [fruits.apply( lambda x: x.find("berry") != - 1)]
+fruits [fruits.apply (lambda x: x.find("berry") != - 1)]
 
 # Write the code to get only the fruits containing "apple" in the name
 fruits [fruits.apply( lambda x: x.find("apple") != - 1)]
@@ -82,6 +77,7 @@ money
 
 # Use series operations to convert the series to a numeric data type.
 moneys = money.str.replace(",","").str.slice(1).astype("float64")
+moneys
 
 # What is the maximum value? The minimum?
 moneys.max()
@@ -92,7 +88,7 @@ moneys
 pd.cut(moneys,4).value_counts()
 
 # Plot a histogram of the data. Be sure to include a title and axis labels.
-%matplotlib inline
+# % matplotlib inline
 import matplotlib.pyplot as plt
 
 moneys.plot.hist(color="blue")
@@ -117,10 +113,14 @@ scores.median()
 scores.plot.hist(color="blue")
 
 # Convert each of the numbers above into a letter grade. For example, 86 should be a 'B' and 95 should be an 'A'.
-
+letter_scores = pd.cut(scores,[0,60,70,80,90,100],labels=["F","D","C","B","A"])
+list(zip(scores,letter_scores))
+letter_scores.value_counts()
 
 # Write the code necessary to implement a curve. I.e. that grade closest to 100 should be converted to a 100, and that many points should be given to every other score as well.
-scores + (100 - scores.max())
+curved_scores = scores + (100 - scores.max())
+curved_letter_scores = pd.cut(curved_scores,[0,60,70,80,90,100],labels=["F","D","C","B","A"])
+curved_letter_scores.value_counts()
 
 # Use pandas to create a Series from the following string:
 # 'hnvidduckkqxwymbimkccexbkmqygkxoyndmcxnwqarhyffsjpsrabtjzsypmzadfavyrnndndvswreauxovncxtwzpwejilzjrmmbbgbyxvjtewqthafnbkqplarokkyydtubbmnexoypulzwfhqvckdpqtpoppzqrmcvhhpwgjwupgzhiofohawytlsiyecuproguy'
