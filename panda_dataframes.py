@@ -36,11 +36,13 @@ df.sort_values(by=["passing_english","name"])
 df.sort_values(by=["passing_english","english"])
 
 # Calculate each students overall grade and add it as a column on the dataframe. The overall grade is the average of the math, english, and reading grades. 
-df["overall_grade"] = df.math + df.english + df.reading
+df["overall_grade"] = (df.math + df.english + df.reading)
 
 # 2. Load the mpg dataset. Read the documentation for the dataset and use it for the following questions:
 mpg = data('mpg')
 data('mpg', show_doc=True)
+
+mpg [mpg.highway >35][[]"highway", "model"]]
 
 # How many rows and columns are there?
 mpg.shape
@@ -72,6 +74,7 @@ mpg.rename(columns={"class":"type"},inplace=True)
 
 mpg_compact = mpg [mpg.type=="compact"]    
 mpg_compact [mpg_compact.highway == mpg_compact.highway.min()]
+mpg_compact [mpg_compact.highway == mpg_compact.highway.min()][["type","model"]]
   
 # Create a column named average_mileage that is the mean of the city and highway mileage.
 mpg["average_mileage"]= (mpg.city + mpg.highway) / 2
@@ -105,11 +108,15 @@ list(zip(mammals,mammals.sort_values(by="speed",ascending=False).head(1).weight)
 list(zip(mammals, mammals [mammals.speed == mammals.speed.max()].weight))
 
 # What is the overal percentage of specials?
-special_mammals = len(mammals [mammals.specials==True]) / len(mammals) * 100
-print(f'the percentage of specials is {round(float(special_mammals),2)}%')
+special_mammals = len(mammals [mammals.specials==True]) / len(mammals)
+
+(mammals.specials == True).mean()
+
+print(f'the percentage of specials is {round(float(special_mammals)*100,2)}%')
 
 # How many animals are hoppers that are above the median speed? What percentage is this?
 len (mammals [(mammals.speed > mammals.speed.median()) & mammals.hoppers==True])
 
 fast_hoppers = (len (mammals [(mammals.speed > mammals.speed.median()) & mammals.hoppers==True])) / len(mammals) * 100
+
 print(f'the percentage of faster than average hoppers is {round(float(fast_hoppers),2)}%')
