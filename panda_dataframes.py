@@ -49,7 +49,7 @@ mpg.shape
 mpg.dtypes
 
 # Summarize the dataframe with .info and .describe
-mpg.info
+mpg.info()
 mpg.describe()
 
 # Rename the cty column to city.
@@ -64,21 +64,24 @@ mpg [mpg.city > mpg.highway]
 # Create a column named mileage_difference this column should contain the difference between highway and city mileage for each car.
 mpg ["mileage_difference"] = mpg.highway - mpg.city
 
-# Which car (or cars) has the highest mileage difference?
-mpg.sort_values(by="mileage_difference",ascending=False).head()
+# Which car (or cars) has the highest mileage difference
+mpg [mpg.mileage_difference == mpg.mileage_difference.max()]
 
 # Which compact class car has the lowest highway mileage? The best?
 mpg.rename(columns={"class":"type"},inplace=True)
-mpg [mpg.type=="compact"].sort_values(by=["highway"],ascending=False).head()
-mpg [mpg.type=="compact"].sort_values(by=["highway"]).head()
-    
+
+mpg_compact = mpg [mpg.type=="compact"]    
+mpg_compact [mpg_compact.highway == mpg_compact.highway.min()]
+  
 # Create a column named average_mileage that is the mean of the city and highway mileage.
 mpg["average_mileage"]= (mpg.city + mpg.highway) / 2
 
 # Which dodge car has the best average mileage? The worst?
 mpg.info()
-mpg [mpg.manufacturer=="dodge"].sort_values(by="average_mileage",ascending=False).head()
-mpg [mpg.manufacturer=="dodge"].sort_values(by="average_mileage").head()
+
+mpg_dodge = mpg [mpg.manufacturer == "dodge"]
+mpg_dodge [mpg_dodge.average_mileage == mpg_dodge.average_mileage.max()]
+mpg_dodge [mpg_dodge.average_mileage == mpg_dodge.average_mileage.min()]
 
 # Load the Mammals dataset. Read the documentation for it, and use the data to answer these questions:
 mammals = data("Mammals")
@@ -95,9 +98,11 @@ mammals.info()
 mammals.describe()
 
 # What is the the weight of the fastest animal?
-mammals.sort_values(by="speed",ascending=False).head(1)
+mammals.sort_values(by="speed",ascending=False).head()
 mammals.sort_values(by="speed",ascending=False).head(1).weight
 list(zip(mammals,mammals.sort_values(by="speed",ascending=False).head(1).weight))
+
+list(zip(mammals, mammals [mammals.speed == mammals.speed.max()].weight))
 
 # What is the overal percentage of specials?
 special_mammals = len(mammals [mammals.specials==True]) / len(mammals) * 100
