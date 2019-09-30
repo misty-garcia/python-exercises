@@ -82,19 +82,24 @@ df_items = df_items.reset_index()
 
 sns.barplot(data =df_items, x=df_items.item_name, y=df_items.revenue)
 
-# Load the sleepstudy data and read it's documentation. Use seaborn to create a line chart of all the individual subject's reaction times and a more prominant line showing the average change in reaction time.
+# 5. Load the sleepstudy data and read it's documentation. Use seaborn to create a line chart of all the individual subject's reaction times and a more prominant line showing the average change in reaction time.
 sleepstudy = data("sleepstudy")
 sleepstudy.describe()
 sleepstudy.info()
-sleepstudy.head(11)
+sleepstudy.nunique()
+sleepstudy.head()
 
-sleepstudy.groupby("Days").mean().Reaction
+avg_reaction = sleepstudy.groupby("Days").mean().Reaction
+avg_reaction = avg_reaction.reset_index()
 
-sns.lineplot(data=sleepstudy, x=sleepstudy.Days,y=sleepstudy.Reaction, hue=sleepstudy.Subject, palette='Blues')
+sns.lineplot(data=sleepstudy, x=sleepstudy.Days,y=sleepstudy.Reaction, hue=sleepstudy.Subject, palette='bone')
 
-sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean().Reaction, color='red')
-
-sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean().Reaction, color='red', linewidth=8, alpha=.3)
+sns.lineplot(data=avg_reaction, x=avg_reaction.Days, y=avg_reaction.Reaction, color='red')
+sns.lineplot(data=avg_reaction, x=avg_reaction.Days, y=avg_reaction.Reaction, color='red', linewidth=8, alpha=.3)
 
 plt.title("Individual's Reactions Time")
+
+# sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean(), color='red')
+# sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean().Reaction, color='red', linewidth=8, alpha=.3)
+
 
