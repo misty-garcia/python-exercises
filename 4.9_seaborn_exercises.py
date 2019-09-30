@@ -2,6 +2,7 @@ from pydataset import data
 import seaborn as sns
 import pandas as pd
 import numpy as np
+from matplotlib import pyplot as plt
 from env import host, user, password
 
 # 1. Use the iris database to answer the following quesitons:
@@ -68,20 +69,32 @@ def get_db_url(username,hostname,password,db_name):
     return url
 
 url = get_db_url(user,host,password,"chipotle")
-
 df_chipotle = pd.read_sql('SELECT * FROM orders',url)
 df_chipotle.head()
-
-df_chipotle.groupby("item_name").count().sort_values(by="id",ascending=False).head(4)
 
 df_chipotle["item_price_num"]= df_chipotle.item_price.str.replace("$","").astype(float)
 df_chipotle.dtypes
 df_chipotle["revenue"]=df_chipotle.quantity*df_chipotle.item_price_num
-df_chipotle.head()
-df_chipotle.groupby("item_name").sum().sort_values(by="revenue", ascending=False).head().revenue
 
-sns.barplot(data =df_chipotle, x=df_chipotle.item_name, y=df_chipotle.item_price_num.sum())
+df_items = df_chipotle.groupby("item_name").sum().sort_values(by="revenue", ascending=False).head(4).revenue
 
-df_chipotle.item_price_num
+df_items = df_items.reset_index()
+
+sns.barplot(data =df_items, x=df_items.item_name, y=df_items.revenue)
 
 # Load the sleepstudy data and read it's documentation. Use seaborn to create a line chart of all the individual subject's reaction times and a more prominant line showing the average change in reaction time.
+sleepstudy = data("sleepstudy")
+sleepstudy.describe()
+sleepstudy.info()
+sleepstudy.head(11)
+
+sleepstudy.groupby("Days").mean().Reaction
+
+sns.lineplot(data=sleepstudy, x=sleepstudy.Days,y=sleepstudy.Reaction, hue=sleepstudy.Subject, palette='Blues')
+
+sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean().Reaction, color='red')
+
+sns.lineplot(data=sleepstudy, x=sleepstudy.Days, y=sleepstudy.groupby("Days").mean().Reaction, color='red', linewidth=8, alpha=.3)
+
+plt.title("Individual's Reactions Time")
+
