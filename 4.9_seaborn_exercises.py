@@ -92,7 +92,7 @@ sleepstudy.head()
 avg_reaction = sleepstudy.groupby("Days").mean().Reaction
 avg_reaction = avg_reaction.reset_index()
 
-sns.lineplot(data=sleepstudy, x=sleepstudy.Days,y=sleepstudy.Reaction, hue=sleepstudy.Subject, palette='bone')
+sns.lineplot(data=sleepstudy, x=sleepstudy.Days,y=sleepstudy.Reaction, hue=sleepstudy.Subject, palette='Blues')
 
 sns.lineplot(data=avg_reaction, x=avg_reaction.Days, y=avg_reaction.Reaction, color='red')
 sns.lineplot(data=avg_reaction, x=avg_reaction.Days, y=avg_reaction.Reaction, color='red', linewidth=8, alpha=.3)
